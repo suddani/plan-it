@@ -1,8 +1,8 @@
 package com.sudi.plan.it;
 
 import com.sudi.plan.it.listener.MultiTaskActionMode;
+import com.sudi.plan.it.listener.NewTaskTitleListener;
 import com.sudi.plan.it.listener.OnTaskClicked;
-import com.sudi.plan.it.listener.NewTitleTextChangeListener;
 import com.sudi.plan.it.models.Task;
 import com.sudi.plan.it.models.TaskAdapter;
 import com.sudi.plan.it.models.TaskEditor;
@@ -12,13 +12,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
-import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -70,39 +66,12 @@ public class MainActivity extends Activity implements TaskEditor {
 		
 		listView.setAdapter(taskAdapter);
 		
+		NewTaskTitleListener newItemTitleListerner = new NewTaskTitleListener(edit_fab_controller, this);
+		
 		newItemTitle = (TextView)this.findViewById(R.id.new_item_title);
-		newItemTitle.addTextChangedListener(new NewTitleTextChangeListener(edit_fab_controller, new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				createDetailItem(v);
-			}}));
-		newItemTitle.setOnFocusChangeListener(new OnFocusChangeListener(){
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus) {
-					cancelItemSelected(true);
-				}
-			}});
-		newItemTitle.setOnKeyListener(new OnKeyListener(){
-			@Override
-		    public boolean onKey(View v, int keyCode, KeyEvent event)
-		    {
-		        if (event.getAction() == KeyEvent.ACTION_DOWN)
-		        {
-		            switch (keyCode)
-		            {
-		                case KeyEvent.KEYCODE_DPAD_CENTER:
-		                case KeyEvent.KEYCODE_ENTER:
-		                    addNewTask(null);
-		                    return true;
-		                default:
-		                    break;
-		            }
-		        }
-		        return false;
-		    }
-		});
+		newItemTitle.addTextChangedListener(newItemTitleListerner);
+		newItemTitle.setOnFocusChangeListener(newItemTitleListerner);
+		newItemTitle.setOnKeyListener(newItemTitleListerner);
 		
 		Log.d("PlanIt.Debug", Task.now().toString());
 	}
@@ -125,23 +94,10 @@ public class MainActivity extends Activity implements TaskEditor {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
-	public void editTask(Task task) {
-		Log.d("PlanIt.Debug", "Edit Task["+task.getId()+"]: "+task.getTitle());
-		cancelItemSelected(true);
-		startEditActivity(task);
-	}
-	
-	public void createDetailItem(View v) {
-		Task task = new Task(newItemTitle.getText().toString());
-		newItemTitle.setText("");
-		Log.d("PlanIt.Debug", "Create Task["+task.getId()+"]: "+task.getTitle());
-		editTask(task);
-	}
-	
-	public void addNewTask(View v) {
-		cancelItemSelected(true);
+	public void newTask() {
+		cancelTaskSelected(true);
 		
 		// make sure there is something in the editbox
 		if (newItemTitle.getText().toString().isEmpty())
@@ -154,9 +110,33 @@ public class MainActivity extends Activity implements TaskEditor {
         // commented out because...
         newItemTitle.setText("");
 	}
+
+	@Override
+	public void newTaskDetail() {
+		Task task = new Task(newItemTitle.getText().toString());
+		newItemTitle.setText("");
+		Log.d("PlanIt.Debug", "Create Task["+task.getId()+"]: "+task.getTitle());
+		editTask(task);
+	}
 	
-	public boolean cancelItemSelected(boolean callfinish) {
+	@Override
+	public void editTask(Task task) {
+		Log.d("PlanIt.Debug", "Edit Task["+task.getId()+"]: "+task.getTitle());
+		cancelTaskSelected(true);
+		startEditActivity(task);
+	}
+	
+	@Override
+	public boolean cancelTaskSelected(boolean callfinish) {
 		return multiSelector.finish();
+	}
+	
+	public void createDetailItem(View v) {
+		newTaskDetail();
+	}
+	
+	public void addNewTask(View v) {
+		newTask();
 	}
 	
 	private void startEditActivity(Task task) {
