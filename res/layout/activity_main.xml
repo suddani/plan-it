@@ -107,6 +107,6 @@
         android:background="@drawable/fab"
         android:onClick="createDetailItem"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_hardware_keyboard_white" />
+        android:src="@drawable/ic_content_edit_white" />
 
 </RelativeLayout>
