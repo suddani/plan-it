@@ -27,4 +27,10 @@ public class SimpleFABController implements FABController {
 		}});
 	}
 
+	@Override
+	public void setup() {
+		fab.setTranslationY(48+fab.getHeight());
+		fab.setVisibility(View.INVISIBLE);
+	}
+
 }

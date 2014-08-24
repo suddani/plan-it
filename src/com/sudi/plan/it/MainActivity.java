@@ -45,16 +45,13 @@ public class MainActivity extends Activity implements TaskEditor {
 
 		taskAdapter = new TaskAdapter(this, this);
 		
-		fab = (ImageButton)this.findViewById(R.id.fab);
-		fab.setTranslationY(48+fab.getHeight());
-		fab.setVisibility(View.INVISIBLE);
-		
+		fab = (ImageButton)this.findViewById(R.id.fab);		
 		fab_expand = (ImageButton)this.findViewById(R.id.fab_expand);
-		fab_expand.setTranslationY(48+fab.getHeight());
-		fab_expand.setVisibility(View.INVISIBLE);
 
 		delete_fab_controller = new SimpleFABController(fab);
+		delete_fab_controller.setup();
 		edit_fab_controller = new SimpleFABController(fab_expand);
+		edit_fab_controller.setup();
 		
 		listView = (ListView)this.findViewById(R.id.listView1);
 		listView.setEmptyView(this.findViewById(R.id.empty_list));
@@ -131,10 +128,7 @@ public class MainActivity extends Activity implements TaskEditor {
 		return multiSelector.finish();
 	}
 	
-	public void createDetailItem(View v) {
-		newTaskDetail();
-	}
-	
+	// Called by the UI directly
 	public void addNewTask(View v) {
 		newTask();
 	}
