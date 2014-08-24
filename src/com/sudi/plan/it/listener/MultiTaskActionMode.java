@@ -1,6 +1,9 @@
 package com.sudi.plan.it.listener;
 
+import java.util.ArrayList;
+
 import com.sudi.plan.it.R;
+import com.sudi.plan.it.animations.ListViewAnimator;
 import com.sudi.plan.it.models.ListItem;
 import com.sudi.plan.it.models.Task;
 import com.sudi.plan.it.views.FABController;
@@ -46,6 +49,12 @@ public class MultiTaskActionMode implements MultiChoiceModeListener {
 
 	protected void deleteSelectedItems() {
 		if (active_mode != null) {
+			ArrayList<View> viewsToremove = new ArrayList<View>();
+			for (int i=0;i<selected_items.size();i++) {
+				viewsToremove.add(selected_items.get(selected_items.keyAt(i)).getView());
+			}
+			ListViewAnimator animator = new ListViewAnimator(listView, viewsToremove);
+			animator.animateLayout();
 			for (int i=0;i<selected_items.size();i++) {
 				selected_items.get(selected_items.keyAt(i)).getTask().delete();
 			}
@@ -113,8 +122,11 @@ public class MultiTaskActionMode implements MultiChoiceModeListener {
 	    return intent;
 	}
 
-	public void finish() {
-		if (active_mode != null)
+	public boolean finish() {
+		if (active_mode != null) {
 			active_mode.finish();
+			return true;
+		}
+		return false;
 	}
 }

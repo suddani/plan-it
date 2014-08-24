@@ -1,11 +1,8 @@
 package com.sudi.plan.it;
 
 import com.sudi.plan.it.listener.MultiTaskActionMode;
-import com.sudi.plan.it.listener.OnDeleteTaskClickListener;
 import com.sudi.plan.it.listener.OnTaskClicked;
-import com.sudi.plan.it.listener.SingleTaskActionMode;
 import com.sudi.plan.it.listener.NewTitleTextChangeListener;
-import com.sudi.plan.it.models.ListItem;
 import com.sudi.plan.it.models.Task;
 import com.sudi.plan.it.models.TaskAdapter;
 import com.sudi.plan.it.models.TaskEditor;
@@ -15,7 +12,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,9 +30,7 @@ public class MainActivity extends Activity implements TaskEditor {
 	private ListView listView;
 	private TaskAdapter taskAdapter;
 	private TextView newItemTitle;
-	private ActionMode mActionMode;
 	private ImageButton fab;
-	private ListItem selectedItem;
 	private ImageButton fab_expand;
 	private InputMethodManager inputMethodManager;
 	private MultiTaskActionMode multiSelector;
@@ -68,10 +62,9 @@ public class MainActivity extends Activity implements TaskEditor {
 		
 		listView = (ListView)this.findViewById(R.id.listView1);
 		listView.setEmptyView(this.findViewById(R.id.empty_list));
-		listView.setOnItemClickListener(new OnTaskClicked(this, taskAdapter));
-//		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-//		listView.setOnItemLongClickListener(new OnTaskLongClicked(this));
+		listView.setOnItemClickListener(new OnTaskClicked(taskAdapter));
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		
 		multiSelector = new MultiTaskActionMode(listView, delete_fab_controller);
 		listView.setMultiChoiceModeListener(multiSelector);
 		
@@ -139,19 +132,12 @@ public class MainActivity extends Activity implements TaskEditor {
 		cancelItemSelected(true);
 		startEditActivity(task);
 	}
-
-	@Override
-	public void deleteTask(Task task) {
-		new OnDeleteTaskClickListener(taskAdapter, selectedItem, listView).onClick(this.fab);
-		cancelItemSelected(true);
-	}
 	
 	public void createDetailItem(View v) {
 		Task task = new Task(newItemTitle.getText().toString());
 		newItemTitle.setText("");
 		Log.d("PlanIt.Debug", "Create Task["+task.getId()+"]: "+task.getTitle());
-		cancelItemSelected(true);
-		startEditActivity(task);
+		editTask(task);
 	}
 	
 	public void addNewTask(View v) {
@@ -162,33 +148,15 @@ public class MainActivity extends Activity implements TaskEditor {
 			return;
 		
         inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        
+		
         taskAdapter.add(new Task(newItemTitle.getText().toString()));
         
         // commented out because...
         newItemTitle.setText("");
 	}
-
-	public void todoItemSelected(ListItem listItem) {
-		if (mActionMode != null) {
-			return;
-		}
-		delete_fab_controller.showFAB(null);
-		selectedItem = listItem;
-		mActionMode = startActionMode(new SingleTaskActionMode(this, listItem));
-	}
 	
 	public boolean cancelItemSelected(boolean callfinish) {
-		multiSelector.finish();
-		if (mActionMode == null)
-			return false;
-		selectedItem = null;
-
-		delete_fab_controller.hideFAB();
-		if (callfinish)
-			mActionMode.finish();
-		mActionMode = null;
-		return true;
+		return multiSelector.finish();
 	}
 	
 	private void startEditActivity(Task task) {

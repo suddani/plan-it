@@ -1,5 +1,8 @@
 package com.sudi.plan.it.animations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.view.View;
@@ -11,12 +14,20 @@ public class ListViewAnimator implements OnPreDrawListener {
 	
 	private ListView listview;
 	private View viewToRemove;
+	private List<View> viewsToRemove;
 	private ViewTreeObserver observer;
 	private LongSparseArray<Integer> itemTopMap;
 	
 	public ListViewAnimator(ListView listview, View view) {
 		this.listview = listview;
 		this.viewToRemove = view;
+		this.viewsToRemove = new ArrayList<View>();
+	}
+	
+	public ListViewAnimator(ListView listview, List<View> viewsToRemove) {
+		this.listview = listview;
+		this.viewToRemove = null;
+		this.viewsToRemove = viewsToRemove;
 	}
 
 	/**
@@ -30,7 +41,7 @@ public class ListViewAnimator implements OnPreDrawListener {
 		int firstVisiblePosition = listview.getFirstVisiblePosition();
 		for (int i=0;i<listview.getChildCount();i++) {
 			View child = listview.getChildAt(i);
-			if (child != viewToRemove) {
+			if (child != viewToRemove || viewsToRemove.contains(child)) {
 				int position = firstVisiblePosition+i;
 				long itemId = listview.getAdapter().getItemId(position);
 //				Log.d("PlanIt.Debug", "Record postion: "+itemId+" : "+child.getTop());
