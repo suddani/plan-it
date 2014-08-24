@@ -1,0 +1,138 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.sudi.plan.it.EditTaskActivity"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+    
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+    	android:descendantFocusability="beforeDescendants" >
+	    
+	    <EditText
+	        android:id="@+id/item_title"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignParentTop="true"
+	        android:layout_marginLeft="16dp"
+	        android:background="@null"
+	        android:clickable="false"
+	        android:drawableRight="?android:attr/dividerVertical"
+	        android:fontFamily="sans-serif-thin"
+	        android:hint="@string/todo_title_hint"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:textColorHint="@color/tab_indicator_color" />
+	    
+	    <View
+	        android:id="@+id/AddEntryDivider"
+	        android:layout_width="wrap_content"
+	        android:layout_height="1dip"
+	        android:layout_marginTop="16dp"
+	        android:layout_marginLeft="16dp"
+	        android:layout_marginRight="16dp"
+	        android:layout_below="@+id/item_title"
+	        android:layout_alignParentLeft="true"
+	        android:background="?android:attr/dividerHorizontal" />
+	
+	    <EditText
+	        android:id="@+id/item_content"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignLeft="@+id/item_title"
+	        android:layout_below="@+id/AddEntryDivider"
+	        android:layout_marginTop="16dp"
+	        android:background="@null"
+	        android:ems="10"
+	        android:hint="@string/todo_content_hint"
+	        android:fontFamily="sans-serif"
+	        android:inputType="textMultiLine"
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+	        android:textColorHint="@color/tab_indicator_color" >
+	
+	        <!-- <requestFocus /> -->
+	    </EditText>
+	
+	    <View
+	        android:id="@+id/AddTimeDivider"
+	        android:layout_width="match_parent"
+	        android:layout_height="3dp"
+	        android:layout_below="@+id/item_content"
+	        android:layout_marginTop="32dp"
+	        android:layout_marginLeft="16dp"
+	        android:layout_marginRight="16dp"
+	        android:background="@drawable/dotted"
+	        android:layerType="software" />
+	
+	    <ImageButton
+	        android:id="@+id/imageButton1"
+	        android:layout_width="24dp"
+	        android:layout_height="24dp"
+	        android:layout_alignLeft="@+id/AddTimeDivider"
+	        android:layout_below="@+id/AddTimeDivider"
+	        android:layout_marginTop="16dp"
+	        android:src="@drawable/ic_action_bell"
+	        android:background="@null"
+	        android:scaleType="fitCenter"
+	        android:adjustViewBounds="true" />
+	
+	    <Button
+	        android:id="@+id/activate_reminder"
+	        android:layout_width="wrap_content"
+	        android:layout_height="56dp"
+	        android:layout_below="@+id/AddTimeDivider"
+	        android:layout_marginLeft="8dp"
+	        android:layout_toRightOf="@+id/imageButton1"
+	        android:background="?android:attr/selectableItemBackground"
+	        android:onClick="activateReminder"
+	        android:text="Remind me"
+	        android:textAppearance="?android:attr/textAppearanceSmall"
+	        android:textColor="@color/tab_indicator_color" />
+	
+	    <Button
+	        android:id="@+id/reminder_date"
+	        android:layout_width="wrap_content"
+	        android:layout_height="56dp"
+	        android:layout_below="@+id/AddTimeDivider"
+	        android:layout_marginLeft="8dp"
+	        android:layout_toRightOf="@+id/imageButton1"
+	        android:background="?android:attr/selectableItemBackground"
+	        android:onClick="changeReminderDate"
+	        android:text="Date"
+	        android:textAppearance="?android:attr/textAppearanceSmall"
+	        android:textColor="@color/action_bar"
+	        android:textColorHint="@color/tab_indicator_color" />
+	
+	    <Button
+	        android:id="@+id/reminder_time"
+	        android:layout_width="wrap_content"
+	        android:layout_height="56dp"
+	        android:layout_below="@+id/AddTimeDivider"
+	        android:layout_marginLeft="8dp"
+	        android:layout_toRightOf="@+id/reminder_date"
+	        android:background="?android:attr/selectableItemBackground"
+	        android:onClick="changeReminderTime"
+	        android:text="Time"
+	        android:textAppearance="?android:attr/textAppearanceSmall"
+	        android:textColor="@color/action_bar"
+	        android:textColorHint="@color/tab_indicator_color" />
+
+	    <ImageButton
+	        android:id="@+id/remove_reminder"
+	        android:layout_width="32dp"
+	        android:layout_height="56dp"
+	        android:layout_alignRight="@+id/AddTimeDivider"
+	        android:layout_below="@+id/AddTimeDivider"
+	        android:background="?android:attr/selectableItemBackground"
+	        android:onClick="removeReminder"
+	        android:src="@drawable/ic_action_content_remove" />
+	
+	</RelativeLayout>
+</ScrollView>

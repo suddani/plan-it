@@ -1,0 +1,33 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="Theme.Planit">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        
+        <item name="android:listViewStyle">@style/ListViewPlanit2</item>
+	    <item name="android:listViewWhiteStyle">@style/ListViewPlanit2.White</item>
+	    <item name="android:spinnerItemStyle">@style/SpinnerItemPlanit2</item>
+    </style>
+    
+        
+    <color name="action_bar">#673ab7</color>
+    <color name="stacked_color">#512da8</color>
+    <color name="tab_indicator_color">#d1c4e9</color>
+    <color name="popup_color">#512da8</color>
+    <color name="accent_color">#9c27b0</color>
+    <color name="action_mode_background_color">#0097a7</color>
+    <color name="action_mode_highlight_color">#00bcd4</color>
+
+</resources>

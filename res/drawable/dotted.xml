@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape 	xmlns:android="http://schemas.android.com/apk/res/android"
+		android:shape="line">
+<!-- 
+    <stroke
+       android:color="#C7B299"
+       android:dashWidth="10px"
+       android:dashGap="10px" /> -->
+    
+    <size
+        android:height="2dp"
+        android:width="700dp" />
+
+    <stroke
+        android:width="2dp"
+        android:color="@color/tab_indicator_color"
+        android:dashWidth="2dp"
+        android:dashGap="5dp" />
+</shape>

@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.sudi.plan.it.EditTaskActivity" >
+
+    <item
+        android:id="@+id/action_delete"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_delete"
+        android:icon="@drawable/ic_action_content_delete_bar"/>
+    <item
+        android:id="@+id/action_cancel"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_cancel"
+        android:icon="@drawable/ic_action_content_remove_bar"/>
+
+    <item
+        android:id="@+id/action_save"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_save"
+        android:icon="@drawable/ic_action_navigation_accept"/>
+</menu>

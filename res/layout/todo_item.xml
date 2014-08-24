@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+	android:descendantFocusability="blocksDescendants"
+	android:background="@drawable/planit2_activated_background_holo_light">
+	<!-- android:background="?android:attr/activatedBackgroundIndicator"> -->
+    <!-- android:animateLayoutChanges="true" > -->
+
+    <TextView
+        android:id="@+id/item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_toLeftOf="@+id/DeleteButtonDivider"
+        android:clickable="false"
+        android:drawableRight="?android:attr/dividerVertical"
+        android:ellipsize="end"
+        android:focusable="false"
+        android:fontFamily="sans-serif-thin"
+        android:maxLines="1"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <View
+        android:id="@+id/DeleteButtonDivider"
+        android:layout_width="1dip"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/remove_list_item"
+        android:layout_toStartOf="@+id/remove_list_item"
+        android:layout_marginBottom="8dip"
+        android:layout_marginTop="8dip"
+        
+        android:background="@drawable/planit_divider_vertical"
+        android:layout_centerHorizontal="true"/>
+
+    <ImageButton
+        android:id="@+id/remove_list_item"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="?android:attr/selectableItemBackground"
+        android:src="@drawable/ic_action_content_edit"
+        android:text="Button" />
+
+</RelativeLayout>
