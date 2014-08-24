@@ -9,6 +9,7 @@ import com.sudi.plan.it.models.ListItem;
 import com.sudi.plan.it.models.Task;
 import com.sudi.plan.it.models.TaskAdapter;
 import com.sudi.plan.it.models.TaskEditor;
+import com.sudi.plan.it.views.SimpleFABController;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -27,7 +28,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements TaskEditor, FABController {
+public class MainActivity extends Activity implements TaskEditor {
 
 //	private ActionBar actionBar;
 	private ListView listView;
@@ -39,6 +40,8 @@ public class MainActivity extends Activity implements TaskEditor, FABController 
 	private ImageButton fab_expand;
 	private InputMethodManager inputMethodManager;
 	private MultiTaskActionMode multiSelector;
+	private SimpleFABController delete_fab_controller;
+	private SimpleFABController edit_fab_controller;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +55,6 @@ public class MainActivity extends Activity implements TaskEditor, FABController 
 
 		taskAdapter = new TaskAdapter(this, this);
 		
-		listView = (ListView)this.findViewById(R.id.listView1);
-		listView.setEmptyView(this.findViewById(R.id.empty_list));
-		listView.setOnItemClickListener(new OnTaskClicked(this, taskAdapter));
-//		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-//		listView.setOnItemLongClickListener(new OnTaskLongClicked(this));
-		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		multiSelector = new MultiTaskActionMode(listView, this);
-		listView.setMultiChoiceModeListener(multiSelector);
-		
-		
-		listView.setAdapter(taskAdapter);
-		
 		fab = (ImageButton)this.findViewById(R.id.fab);
 		fab.setTranslationY(48+fab.getHeight());
 		fab.setVisibility(View.INVISIBLE);
@@ -71,9 +62,27 @@ public class MainActivity extends Activity implements TaskEditor, FABController 
 		fab_expand = (ImageButton)this.findViewById(R.id.fab_expand);
 		fab_expand.setTranslationY(48+fab.getHeight());
 		fab_expand.setVisibility(View.INVISIBLE);
+
+		delete_fab_controller = new SimpleFABController(fab);
+		edit_fab_controller = new SimpleFABController(fab_expand);
+		
+		listView = (ListView)this.findViewById(R.id.listView1);
+		listView.setEmptyView(this.findViewById(R.id.empty_list));
+		listView.setOnItemClickListener(new OnTaskClicked(this, taskAdapter));
+//		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+//		listView.setOnItemLongClickListener(new OnTaskLongClicked(this));
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		multiSelector = new MultiTaskActionMode(listView, delete_fab_controller);
+		listView.setMultiChoiceModeListener(multiSelector);
+		
+		listView.setAdapter(taskAdapter);
 		
 		newItemTitle = (TextView)this.findViewById(R.id.new_item_title);
-		newItemTitle.addTextChangedListener(new NewTitleTextChangeListener(fab_expand));
+		newItemTitle.addTextChangedListener(new NewTitleTextChangeListener(edit_fab_controller, new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				createDetailItem(v);
+			}}));
 		newItemTitle.setOnFocusChangeListener(new OnFocusChangeListener(){
 
 			@Override
@@ -92,7 +101,7 @@ public class MainActivity extends Activity implements TaskEditor, FABController 
 		            {
 		                case KeyEvent.KEYCODE_DPAD_CENTER:
 		                case KeyEvent.KEYCODE_ENTER:
-		                    addItem(null);
+		                    addNewTask(null);
 		                    return true;
 		                default:
 		                    break;
@@ -124,20 +133,6 @@ public class MainActivity extends Activity implements TaskEditor, FABController 
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void deleteTask(View v) {
-		if (selectedItem == null)
-			return;
-		Task task = selectedItem.getTask();
-		deleteTask(task);
-	}
-	
-	public void editTask(View v) {
-		if (selectedItem == null)
-			return;
-		Task task = selectedItem.getTask();
-		editTask(task);
-	}
-	
 	@Override
 	public void editTask(Task task) {
 		Log.d("PlanIt.Debug", "Edit Task["+task.getId()+"]: "+task.getTitle());
@@ -159,7 +154,7 @@ public class MainActivity extends Activity implements TaskEditor, FABController 
 		startEditActivity(task);
 	}
 	
-	public void addItem(View v) {
+	public void addNewTask(View v) {
 		cancelItemSelected(true);
 		
 		// make sure there is something in the editbox
@@ -173,17 +168,12 @@ public class MainActivity extends Activity implements TaskEditor, FABController 
         // commented out because...
         newItemTitle.setText("");
 	}
-	
-	public void focusNewTask(View v) {
-		newItemTitle.requestFocus();
-		inputMethodManager.showSoftInput(newItemTitle, 0);
-	}
 
 	public void todoItemSelected(ListItem listItem) {
 		if (mActionMode != null) {
 			return;
 		}
-		showFAB(null);
+		delete_fab_controller.showFAB(null);
 		selectedItem = listItem;
 		mActionMode = startActionMode(new SingleTaskActionMode(this, listItem));
 	}
@@ -194,7 +184,7 @@ public class MainActivity extends Activity implements TaskEditor, FABController 
 			return false;
 		selectedItem = null;
 
-		hideFAB();
+		delete_fab_controller.hideFAB();
 		if (callfinish)
 			mActionMode.finish();
 		mActionMode = null;
@@ -219,17 +209,5 @@ public class MainActivity extends Activity implements TaskEditor, FABController 
 	        	taskAdapter.reload();
 	        }
 	    }
-	}
-
-	@Override
-	public void showFAB(OnClickListener listener) {
-		fab.setVisibility(View.VISIBLE);
-		fab.animate().translationY(0).alpha(1);
-		fab.setOnClickListener(listener);
-	}
-
-	@Override
-	public void hideFAB() {
-		fab.animate().translationY(48+fab.getHeight()).alpha(0);
 	}
 }

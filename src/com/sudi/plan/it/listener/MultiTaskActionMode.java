@@ -1,9 +1,9 @@
 package com.sudi.plan.it.listener;
 
-import com.sudi.plan.it.FABController;
 import com.sudi.plan.it.R;
 import com.sudi.plan.it.models.ListItem;
 import com.sudi.plan.it.models.Task;
+import com.sudi.plan.it.views.FABController;
 
 import android.content.Intent;
 import android.util.Log;

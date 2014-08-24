@@ -1,4 +1,4 @@
-package com.sudi.plan.it;
+package com.sudi.plan.it.views;
 
 import android.view.View.OnClickListener;
 

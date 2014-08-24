@@ -7,7 +7,6 @@
     <uses-sdk
         android:minSdkVersion="17"
         android:targetSdkVersion="20" />
-    <!-- <uses-permission android:name="android.permission.READ_CONTACTS"/> -->
 
     <application
         android:allowBackup="true"
@@ -31,6 +30,23 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sudi.plan.it.MainActivity" /> -->
         </activity>
+        
+        <service
+            android:name="com.sudi.plan.it.sync.AuthenticatorService">
+	        <intent-filter>
+	            <action android:name="android.accounts.AccountAuthenticator"/>
+	        </intent-filter>
+	        <meta-data
+	            android:name="android.accounts.AccountAuthenticator"
+	            android:resource="@xml/authenticator" />
+	    </service>
+	    
+        <provider
+	        android:name="com.sudi.plan.it.sync.provider.StubProvider"
+	        android:authorities="com.sudi.plan.it.sync.provider"
+	        android:exported="false"
+	        android:syncable="true"/>
+        
     </application>
 
 </manifest>

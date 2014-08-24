@@ -47,7 +47,7 @@
         android:height="48dp"
         android:minHeight="48dp"
         android:minWidth="48dp"
-        android:onClick="addItem"
+        android:onClick="addNewTask"
         android:src="@drawable/ic_action_add"
         android:text="Button"
         android:width="48dp" />
@@ -92,7 +92,6 @@
         android:layout_marginBottom="32dp"
         android:layout_marginRight="32dp"
         android:background="@drawable/fab"
-        android:onClick="deleteTask"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_content_delete_white" />
 
@@ -105,7 +104,6 @@
         android:layout_marginBottom="32dp"
         android:layout_marginLeft="32dp"
         android:background="@drawable/fab"
-        android:onClick="createDetailItem"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_content_edit_white" />
 

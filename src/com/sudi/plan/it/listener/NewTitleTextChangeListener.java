@@ -1,46 +1,38 @@
 package com.sudi.plan.it.listener;
 
+import com.sudi.plan.it.views.FABController;
+
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
-import android.widget.ImageButton;
+import android.view.View.OnClickListener;
 
 public class NewTitleTextChangeListener implements TextWatcher {
 
-	private ImageButton fab_expand;
+	private FABController fab_expand;
 	private boolean active = false;
+	private OnClickListener onClickListener;
 
-	public NewTitleTextChangeListener(ImageButton fab_expand) {
-		this.fab_expand = fab_expand;
+	public NewTitleTextChangeListener(FABController edit_fab_controller, OnClickListener onClickListener) {
+		this.fab_expand = edit_fab_controller;
+		this.onClickListener = onClickListener;
 	}
 
 	@Override
 	public void beforeTextChanged(CharSequence s, int start, int count,
 			int after) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void afterTextChanged(Editable s) {
 		if (s.length() > 0 && !active) {
-			fab_expand.setVisibility(View.VISIBLE);
-			fab_expand.animate().translationY(0).alpha(1);
+			fab_expand.showFAB(onClickListener);
 			active = true;
 		}else if (s.length() ==  0 && active){
-			fab_expand.animate().translationY(48+fab_expand.getHeight()).alpha(0).withEndAction(new Runnable() {
-
-				@Override
-				public void run() {
-					fab_expand.setVisibility(View.INVISIBLE);
-				}});
-
+			fab_expand.hideFAB();
 			active = false;
 		}
 	}
