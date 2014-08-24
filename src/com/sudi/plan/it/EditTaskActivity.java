@@ -4,9 +4,13 @@ import com.sudi.plan.it.fragments.DatePickerFragment;
 import com.sudi.plan.it.fragments.TimePickerFragment;
 import com.sudi.plan.it.models.Task;
 import com.sudi.plan.it.models.TaskDbHelper;
+import com.sudi.plan.it.notifications.Notifier;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -29,6 +33,8 @@ public class EditTaskActivity extends Activity {
 	private Button activate_reminder;
 	private Button reminder_date;
 	private Button reminder_time;
+	private BroadcastReceiver updated_receiver;
+	private Notifier notifier;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +53,33 @@ public class EditTaskActivity extends Activity {
 		reminder_date = (Button)this.findViewById(R.id.reminder_date);
 		reminder_time = (Button)this.findViewById(R.id.reminder_time);
 		
+		notifier = new Notifier(this, dbHelper);
+		
 		
 		Intent intent = getIntent();
+		initTask(intent);
+		
+		updated_receiver = new BroadcastReceiver() {
+
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				initTask(getIntent());
+			}
+			
+		};
+		setResult(Activity.RESULT_OK, new Intent());
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		initTask(intent);
+	}
+	
+	private void initTask(Intent intent) {
 		String task_title = intent.getStringExtra("task_title");
 		long task_id = intent.getLongExtra("task_id", -1);
+		Log.d("PlanIt.Debug", "Called new Intent and update Task: "+task_id+" - "+task_title);
 		if (task_id != -1) {
 			task = dbHelper.getTask(task_id);
 		}
@@ -66,8 +95,6 @@ public class EditTaskActivity extends Activity {
 			this.hideReminderButtons();
 		else
 			this.showReminderButtons();
-
-		setResult(Activity.RESULT_OK, new Intent());
 	}
 
 	@Override
@@ -110,17 +137,25 @@ public class EditTaskActivity extends Activity {
 	public void onResume() {
 		super.onResume();
 		doNotSave = true;
+		registerReceiver(updated_receiver, new IntentFilter("task.updated"));
 	}
 	
 	@Override
 	public void onPause() {
+		unregisterReceiver(updated_receiver);
 		if (!doNotSave) {
 			updateOrSaveTask();
-		} else {
-			setResult(Activity.RESULT_CANCELED, new Intent());
+//		} else {
+//			setResult(Activity.RESULT_CANCELED, new Intent());
 		}
 		super.onPause();
 		overridePendingTransition(R.anim.animation_enter_slide_right, R.anim.animation_leave_slide_right);
+	}
+	
+	@Override
+	public void onDestroy() {
+		dbHelper.close();
+		super.onDestroy();
 	}
 	
 	@Override
@@ -173,5 +208,6 @@ public class EditTaskActivity extends Activity {
 			task.delete();
 		else
 			task.update();
+		notifier.setNextAlarm(dbHelper);
 	}
 }

@@ -151,6 +151,12 @@ public class Task {
 	public void delete() {
 		getDbHelper().removeTask(this);
 	}
+
+	public void rescedule() {
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MINUTE, 10);
+		setDueDate(c.getTime());
+	}
 	
 	static public Task fromCursor(Cursor cursor) {
 		Task task = new Task();
@@ -184,8 +190,9 @@ public class Task {
 	public static Date tomorrowMorning() {
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.DAY_OF_MONTH, 1);
-		c.set(Calendar.HOUR, 9);
+		c.set(Calendar.HOUR_OF_DAY, 9);
 		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
 		return c.getTime();
 	}
 }

@@ -4,6 +4,7 @@ import com.sudi.plan.it.R;
 import com.sudi.plan.it.animations.ListViewAnimator;
 import com.sudi.plan.it.models.Task;
 import com.sudi.plan.it.models.TaskAdapter;
+import com.sudi.plan.it.notifications.Notifier;
 
 import android.graphics.Paint;
 import android.view.View;
@@ -15,9 +16,11 @@ import android.widget.TextView;
 public class OnTaskClicked implements OnItemClickListener {
 	
 	private TaskAdapter adapter;
+	private Notifier notifier;
 
-	public OnTaskClicked(TaskAdapter adapter) {
+	public OnTaskClicked(TaskAdapter adapter, Notifier notifier) {
 		this.adapter = adapter;
+		this.notifier = notifier;
 	}
 
 	@Override
@@ -35,6 +38,7 @@ public class OnTaskClicked implements OnItemClickListener {
 		Task task = (Task)view.getTag();
 		task.setDone(!task.isDone());
 		task.update();
+		notifier.setNextAlarm(null);
 		adapter.notifyDataSetChanged();
 	}
 

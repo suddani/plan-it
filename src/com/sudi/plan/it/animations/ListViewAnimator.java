@@ -3,7 +3,6 @@ package com.sudi.plan.it.animations;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.Log;
 import android.util.LongSparseArray;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -58,7 +57,7 @@ public class ListViewAnimator implements OnPreDrawListener {
 	 */
 	@Override
 	public boolean onPreDraw() {
-		Log.d("PlanIt.Debug", "Animate the views");
+//		Log.d("PlanIt.Debug", "Animate the views");
 		observer.removeOnPreDrawListener(this);
 		boolean firstAnimation = true;
 		int firstVisiblePosition = listview.getFirstVisiblePosition();

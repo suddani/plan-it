@@ -41,11 +41,11 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 		task.setId(db.insert(Task.TABLE, null, task.getContentValues()));
 		task.setDbHelper(this);
 		loadTaskList(db);
-		db.close();
+//		db.close();
 	}
 	
-	public Task getTask(long id) {
-//		String selectQuery = "SELECT  * FROM " + Task.TABLE + " WHERE ID "+Task.KEY_ID+" ASC, "+Task.KEY_DUEDATE+" ASC, "+Task.KEY_ID+" DESC";
+	public Task getTask(long id) {		
+		// did not find it so load from DB
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor cursor = db.query(Task.TABLE, new String[]{Task.KEY_ID,
 				Task.KEY_TITLE,
@@ -68,7 +68,9 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 	private List<Task> loadTaskList(SQLiteDatabase db_handle) {
 		taskList = new ArrayList<Task>();
 		String selectQuery = "SELECT  * FROM " + Task.TABLE + " ORDER BY "+Task.KEY_DONE+" ASC, "+Task.KEY_DUEDATE+" ASC, "+Task.KEY_ID+" DESC";
-		SQLiteDatabase db = db_handle == null ? this.getReadableDatabase() : db_handle;
+		SQLiteDatabase db = db_handle;
+		if (db == null)
+			db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
@@ -77,9 +79,8 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 				taskList.add(Task.fromCursor(cursor, this));
 			} while (cursor.moveToNext());
 		}
-		if (db_handle == null) 
-			db.close();
-		// return task list
+//		if (db_handle == null) 
+//			db.close();
 		return taskList;
 	}
 	
@@ -94,7 +95,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 		
 		db.update(Task.TABLE, task.getContentValues(), Task.KEY_ID + " = ?", new String[]{String.valueOf(task.getId())});
 		loadTaskList(db);
-		db.close();
+//		db.close();
 	}
 	
 	public void removeTask(Task task) {
@@ -107,7 +108,21 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 		// updating row
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.delete(Task.TABLE, Task.KEY_ID + " = ?", new String[]{String.valueOf(task.getId())});
-		db.close();
+//		db.close();
+	}
+
+	public Task getNextDueTask(SQLiteDatabase db_handle) {
+		SQLiteDatabase db = db_handle;
+		if (db == null)
+			db = this.getReadableDatabase();
+		Cursor cursor = db.query(Task.TABLE, null, Task.KEY_DONE+" = 0 AND "+Task.KEY_DUEDATE+" != 0 AND "+Task.KEY_DUEDATE+" > "+Task.now().getTime(), null, null, null, Task.KEY_DUEDATE+" ASC", "1");
+
+		if (cursor.moveToFirst()) {
+//			db.close();
+			return Task.fromCursor(cursor, this);
+		}
+//		db.close();
+		return null;
 	}
 
 }

@@ -5,11 +5,16 @@ import com.sudi.plan.it.listener.NewTaskTitleListener;
 import com.sudi.plan.it.listener.OnTaskClicked;
 import com.sudi.plan.it.models.Task;
 import com.sudi.plan.it.models.TaskAdapter;
+import com.sudi.plan.it.models.TaskDbHelper;
 import com.sudi.plan.it.models.TaskEditor;
+import com.sudi.plan.it.notifications.Notifier;
 import com.sudi.plan.it.views.SimpleFABController;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -32,6 +37,9 @@ public class MainActivity extends Activity implements TaskEditor {
 	private MultiTaskActionMode multiSelector;
 	private SimpleFABController delete_fab_controller;
 	private SimpleFABController edit_fab_controller;
+	private BroadcastReceiver updated_receiver;
+	private Notifier notifier;
+	private TaskDbHelper dbHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +50,10 @@ public class MainActivity extends Activity implements TaskEditor {
 		
 		inputMethodManager = (InputMethodManager)  getSystemService(Activity.INPUT_METHOD_SERVICE);
 		
-
-		taskAdapter = new TaskAdapter(this, this);
+		
+		dbHelper = new TaskDbHelper(this);
+		notifier = new Notifier(this, dbHelper);
+		taskAdapter = new TaskAdapter(this, this, dbHelper);
 		
 		fab = (ImageButton)this.findViewById(R.id.fab);		
 		fab_expand = (ImageButton)this.findViewById(R.id.fab_expand);
@@ -55,10 +65,10 @@ public class MainActivity extends Activity implements TaskEditor {
 		
 		listView = (ListView)this.findViewById(R.id.listView1);
 		listView.setEmptyView(this.findViewById(R.id.empty_list));
-		listView.setOnItemClickListener(new OnTaskClicked(taskAdapter));
+		listView.setOnItemClickListener(new OnTaskClicked(taskAdapter, notifier));
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		
-		multiSelector = new MultiTaskActionMode(listView, delete_fab_controller);
+		multiSelector = new MultiTaskActionMode(listView, delete_fab_controller, notifier);
 		listView.setMultiChoiceModeListener(multiSelector);
 		
 		listView.setAdapter(taskAdapter);
@@ -71,6 +81,34 @@ public class MainActivity extends Activity implements TaskEditor {
 		newItemTitle.setOnKeyListener(newItemTitleListerner);
 		
 		Log.d("PlanIt.Debug", Task.now().toString());
+		
+		//listen for notification updates
+		updated_receiver = new BroadcastReceiver() {
+
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				taskAdapter.reload();
+			}
+			
+		};
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		registerReceiver(updated_receiver, new IntentFilter("task.updated"));
+	}
+	
+	@Override
+	public void onPause() {
+		unregisterReceiver(updated_receiver);
+		super.onPause();
+	}
+	
+	@Override
+	public void onDestroy() {
+		dbHelper.close();
+		super.onDestroy();
 	}
 
 	@Override
@@ -133,6 +171,12 @@ public class MainActivity extends Activity implements TaskEditor {
 		newTask();
 	}
 	
+	// Called by the UI directly
+	public void focusNewTask(View v) {
+		newItemTitle.requestFocus();
+		inputMethodManager.showSoftInput(newItemTitle, 0);
+	}
+	
 	private void startEditActivity(Task task) {
 		Intent intent = new Intent(this, EditTaskActivity.class);
 		intent.putExtra("task_title", task.getTitle());
@@ -140,7 +184,7 @@ public class MainActivity extends Activity implements TaskEditor {
 		startActivityForResult(intent, 0);
 		overridePendingTransition(R.anim.animation_enter_slide_left, R.anim.animation_leave_slide_left);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.d("PlanIt.Debug", "Edit task closed with: "+requestCode+" - "+resultCode+" == "+RESULT_OK);

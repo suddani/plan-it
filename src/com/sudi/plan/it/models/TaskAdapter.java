@@ -16,9 +16,9 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 	private TaskDbHelper dbHelper;
 	private TaskViewFactory factory;
 
-	public TaskAdapter(Context context, TaskEditor taskEditor) {
+	public TaskAdapter(Context context, TaskEditor taskEditor, TaskDbHelper dbHelper) {
 		super(context, R.layout.todo_item_date);
-		dbHelper = new TaskDbHelper(context);
+		this.dbHelper = dbHelper;
 		factory = new TaskViewFactory(taskEditor, this, (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE));
 	}
 
@@ -88,6 +88,10 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Task current = tasks().get(position);
 		return factory.create(current, convertView, parent);
+	}
+
+	public Task getTask(long task_id) {
+		return dbHelper.getTask(task_id);
 	}
 
 }

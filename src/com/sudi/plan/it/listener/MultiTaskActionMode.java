@@ -6,6 +6,7 @@ import com.sudi.plan.it.R;
 import com.sudi.plan.it.animations.ListViewAnimator;
 import com.sudi.plan.it.models.ListItem;
 import com.sudi.plan.it.models.Task;
+import com.sudi.plan.it.notifications.Notifier;
 import com.sudi.plan.it.views.FABController;
 
 import android.content.Intent;
@@ -28,10 +29,12 @@ public class MultiTaskActionMode implements MultiChoiceModeListener {
 	private LongSparseArray<ListItem> selected_items;
 	private ActionMode active_mode;
 	private FABController fabController;
+	private Notifier notifier;
 
-	public MultiTaskActionMode(ListView listView, FABController fabController) {
+	public MultiTaskActionMode(ListView listView, FABController fabController, Notifier notifier) {
 		this.listView = listView;
 		this.fabController = fabController;
+		this.notifier = notifier;
 		selected_items = new LongSparseArray<ListItem>();
 	}
 
@@ -58,6 +61,7 @@ public class MultiTaskActionMode implements MultiChoiceModeListener {
 			for (int i=0;i<selected_items.size();i++) {
 				selected_items.get(selected_items.keyAt(i)).getTask().delete();
 			}
+			notifier.setNextAlarm(null);
 			active_mode.finish();
 		}
 	}
