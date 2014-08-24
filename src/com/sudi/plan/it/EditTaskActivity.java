@@ -64,6 +64,7 @@ public class EditTaskActivity extends Activity {
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				initTask(getIntent());
+				invalidateOptionsMenu();
 			}
 			
 		};
