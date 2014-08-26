@@ -30,6 +30,22 @@
             android:label="@string/title_activity_edit_task">
         </activity>
         
+        <service
+            android:name="com.sudi.plan.it.sync.AuthenticatorService">
+          <intent-filter>
+              <action android:name="android.accounts.AccountAuthenticator"/>
+          </intent-filter>
+          <meta-data
+              android:name="android.accounts.AccountAuthenticator"
+              android:resource="@xml/authenticator" />
+      	</service>
+      
+        <provider
+          android:name="com.sudi.plan.it.sync.provider.StubProvider"
+          android:authorities="com.sudi.plan.it.sync.provider"
+          android:exported="false"
+          android:syncable="true"/>
+        
         <receiver 
             android:name=".notifications.Notifier"
             android:enabled="false">
