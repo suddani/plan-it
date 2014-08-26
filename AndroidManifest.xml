@@ -28,27 +28,7 @@
         <activity
             android:name=".EditTaskActivity"
             android:label="@string/title_activity_edit_task">
-<!--             android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.sudi.plan.it.MainActivity" /> -->
         </activity>
-        
-        <service
-            android:name="com.sudi.plan.it.sync.AuthenticatorService">
-	        <intent-filter>
-	            <action android:name="android.accounts.AccountAuthenticator"/>
-	        </intent-filter>
-	        <meta-data
-	            android:name="android.accounts.AccountAuthenticator"
-	            android:resource="@xml/authenticator" />
-	    </service>
-	    
-        <provider
-	        android:name="com.sudi.plan.it.sync.provider.StubProvider"
-	        android:authorities="com.sudi.plan.it.sync.provider"
-	        android:exported="false"
-	        android:syncable="true"/>
         
         <receiver 
             android:name=".notifications.Notifier"

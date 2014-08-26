@@ -1,5 +1,6 @@
 package com.sudi.plan.it;
 
+import com.sudi.plan.it.animations.ListViewAnimator;
 import com.sudi.plan.it.listener.MultiTaskActionMode;
 import com.sudi.plan.it.listener.NewTaskTitleListener;
 import com.sudi.plan.it.listener.OnTaskClicked;
@@ -87,6 +88,8 @@ public class MainActivity extends Activity implements TaskEditor {
 
 			@Override
 			public void onReceive(Context context, Intent intent) {
+				ListViewAnimator anim = new ListViewAnimator(listView, (View)null);
+				anim.animateLayout();
 				taskAdapter.reload();
 			}
 			
