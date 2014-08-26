@@ -3,6 +3,11 @@ package com.sudi.plan.it.views;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+/**
+ * Imlements a FABController for the MainActivity
+ * @author dsudmann
+ *
+ */
 public class SimpleFABController implements FABController {
 
 	private View fab;

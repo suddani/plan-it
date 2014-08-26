@@ -9,6 +9,21 @@ import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.ListView;
 
+
+/**
+ * This class is used to animate the listview. For example removal or reorder
+ * Usage:
+ * 		Before you change the list initialize this class and call animateLayout. After you are done and the animation just works.
+ * 			ListViewAnimator animator = new ListViewAnimator(this.listView, (View)null);
+ * 			animator.animateLayout();
+ * 		The second parameter in the constructor is used to mark certain elements for not beeing animated.
+ * 		Should be used when deleting elements. Simply pass in the view or views that will be removed.
+ *
+ * Remark:
+ * 		Only works with listview adapters that produce stable ids. Otherwise the animation is not predictable
+ * @author dsudmann
+ *
+ */
 public class ListViewAnimator implements OnPreDrawListener {
 	
 	private ListView listview;
@@ -17,12 +32,22 @@ public class ListViewAnimator implements OnPreDrawListener {
 	private ViewTreeObserver observer;
 	private LongSparseArray<Integer> itemTopMap;
 	
+	/**
+	 * Create a listview animator that animates all items except the one passed in as second parameter
+	 * @param listview
+	 * @param view
+	 */
 	public ListViewAnimator(ListView listview, View view) {
 		this.listview = listview;
 		this.viewToRemove = view;
 		this.viewsToRemove = new ArrayList<View>();
 	}
 	
+	/**
+	 * Create a listview animator that animates all items except the ones passed in as second parameter
+	 * @param listview
+	 * @param viewsToRemove
+	 */
 	public ListViewAnimator(ListView listview, List<View> viewsToRemove) {
 		this.listview = listview;
 		this.viewToRemove = null;
@@ -32,6 +57,7 @@ public class ListViewAnimator implements OnPreDrawListener {
 	/**
 	 * After this method is called the animation is hot.
 	 * This instance should not be used anymore after this!
+	 * Now you should edit you dataset in the listview adapter
 	 */
 	public void animateLayout() {
 		

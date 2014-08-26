@@ -7,6 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+/**
+ * Used to receive Alarms about Task dueDates set by the user
+ * @author dsudmann
+ *
+ */
 public class AlarmReceiver extends BroadcastReceiver {
 	
 	TaskDbHelper dbHelper;

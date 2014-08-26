@@ -22,6 +22,11 @@ import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import android.widget.AbsListView.MultiChoiceModeListener;
 
+/**
+ * This class manages the ActionMode in the Mainactivity
+ * @author dsudmann
+ *
+ */
 public class MultiTaskActionMode implements MultiChoiceModeListener {
 
 	private ShareActionProvider mShareActionProvider;
@@ -50,6 +55,9 @@ public class MultiTaskActionMode implements MultiChoiceModeListener {
 		return true;
 	}
 
+	/**
+	 * This methods deletes all currently selected items in the listview
+	 */
 	protected void deleteSelectedItems() {
 		if (active_mode != null) {
 			ArrayList<View> viewsToremove = new ArrayList<View>();
@@ -112,13 +120,21 @@ public class MultiTaskActionMode implements MultiChoiceModeListener {
 		mode.invalidate();
 	}
 	
-	// Call to update the share intent
+	/**
+	 * Call to update the share intent
+	 * @param shareIntent The Intent that is shared
+	 */
 	private void setShareIntent(Intent shareIntent) {
 	    if (mShareActionProvider != null) {
 	    	mShareActionProvider.setShareIntent(shareIntent);
 	    }
 	}
 	
+	/**
+	 * Creates a simple text share intent
+	 * @param text The text to be shared
+	 * @return The intent ready to be set as SharedIntent
+	 */
 	private Intent getTextIntent(String text) {
 	    Intent intent = new Intent(Intent.ACTION_SEND);
 	    intent.setType("text/plain");
@@ -126,6 +142,10 @@ public class MultiTaskActionMode implements MultiChoiceModeListener {
 	    return intent;
 	}
 
+	/**
+	 * Close the actionMode
+	 * @return Returns true if the actionMode was active. Otherwise false
+	 */
 	public boolean finish() {
 		if (active_mode != null) {
 			active_mode.finish();

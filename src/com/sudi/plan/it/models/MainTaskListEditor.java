@@ -11,7 +11,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MainTaskEditor implements TaskEditor {
+/**
+ * Class is used to manage base editing modes on the TodoList.
+ * @author dsudmann
+ *
+ */
+public class MainTaskListEditor implements TaskListEditor {
 	
 	private ListView listView;
 	private TaskAdapter taskAdapter;
@@ -21,7 +26,7 @@ public class MainTaskEditor implements TaskEditor {
 	private Notifier notifier;
 	private MainActivity mainActivity;
 
-	public MainTaskEditor(MainActivity mainActivity, ListView listView2,
+	public MainTaskListEditor(MainActivity mainActivity, ListView listView2,
 			TextView newItemTitle2, InputMethodManager inputMethodManager2,
 			MultiTaskActionMode multiSelector2, Notifier notifier2) {
 		this.mainActivity = mainActivity;
@@ -77,7 +82,11 @@ public class MainTaskEditor implements TaskEditor {
 	public boolean cancelTaskSelected(boolean callfinish) {
 		return multiSelector.finish();
 	}
-
+	
+	/**
+	 * Set the taskAdapter that should be used by this editor.
+	 * @param taskAdapter2 The taskAdapter
+	 */
 	public void setTaskAdapter(TaskAdapter taskAdapter2) {
 		this.taskAdapter = taskAdapter2;
 	}

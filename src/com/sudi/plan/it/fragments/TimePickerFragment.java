@@ -12,6 +12,11 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
 
+/**
+ * This fragment is used to create a time picker based on a supplied task
+ * @author dsudmann
+ *
+ */
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 	
 	private Task task;
