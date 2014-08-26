@@ -23,6 +23,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		
 		Notifier notifier = new Notifier(context, dbHelper);
 		notifier.setNextAlarm(null);
+		dbHelper.close();
 	}
 
 }
