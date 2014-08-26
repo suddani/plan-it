@@ -43,7 +43,6 @@ public class ListViewAnimator implements OnPreDrawListener {
 			if (child != viewToRemove || viewsToRemove.contains(child)) {
 				int position = firstVisiblePosition+i;
 				long itemId = listview.getAdapter().getItemId(position);
-//				Log.d("PlanIt.Debug", "Record postion: "+itemId+" : "+child.getTop());
 				itemTopMap.put(itemId, child.getTop());
 			}
 		}
@@ -57,7 +56,6 @@ public class ListViewAnimator implements OnPreDrawListener {
 	 */
 	@Override
 	public boolean onPreDraw() {
-//		Log.d("PlanIt.Debug", "Animate the views");
 		observer.removeOnPreDrawListener(this);
 		boolean firstAnimation = true;
 		int firstVisiblePosition = listview.getFirstVisiblePosition();
@@ -67,7 +65,6 @@ public class ListViewAnimator implements OnPreDrawListener {
 			long itemId = listview.getAdapter().getItemId(position);
 			Integer startTop = itemTopMap.get(itemId);
 			int top = child.getTop();
-//			Log.d("PlanIt.Debug", "Animate postion: "+itemId+" : "+startTop+" to "+child.getTop());
 			if (startTop != null) {
 				if (startTop != top) {
 					animateView(child, startTop, top);

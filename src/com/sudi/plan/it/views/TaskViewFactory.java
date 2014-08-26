@@ -69,7 +69,6 @@ public class TaskViewFactory {
 		
 		ImageButton removeItem = (ImageButton)convertView.findViewById(R.id.remove_list_item);
 		removeItem.setTag(task);
-//		removeItem.setOnClickListener(new OnDeleteItemClickListener(taskAdapter, new ListItem(convertView, task), (ListView)parent));
 		removeItem.setOnClickListener(new OnEditTaskClickListener(taskEditor, new ListItem(convertView, task)));
 		
 		boolean hasDate = task.getDueDate() != null;

@@ -5,7 +5,6 @@ import java.util.Date;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
 
 public class Task {
@@ -35,8 +34,6 @@ public class Task {
 	public Task(String title) {
 		this.title = title;
 		description = "";
-
-		Log.d("PlanIt.Debug", "Created Task with date: "+dueDate);
 	}
 
 	public Task() {

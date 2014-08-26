@@ -4,10 +4,10 @@ import com.sudi.plan.it.animations.ListViewAnimator;
 import com.sudi.plan.it.listener.MultiTaskActionMode;
 import com.sudi.plan.it.listener.NewTaskTitleListener;
 import com.sudi.plan.it.listener.OnTaskClicked;
+import com.sudi.plan.it.models.MainTaskEditor;
 import com.sudi.plan.it.models.Task;
 import com.sudi.plan.it.models.TaskAdapter;
 import com.sudi.plan.it.models.TaskDbHelper;
-import com.sudi.plan.it.models.TaskEditor;
 import com.sudi.plan.it.notifications.Notifier;
 import com.sudi.plan.it.views.SimpleFABController;
 
@@ -26,7 +26,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements TaskEditor {
+public class MainActivity extends Activity {
 
 //	private ActionBar actionBar;
 	private ListView listView;
@@ -41,6 +41,7 @@ public class MainActivity extends Activity implements TaskEditor {
 	private BroadcastReceiver updated_receiver;
 	private Notifier notifier;
 	private TaskDbHelper dbHelper;
+	private MainTaskEditor mainTaskEditor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,34 +50,42 @@ public class MainActivity extends Activity implements TaskEditor {
 //		actionBar = getActionBar();
 //		actionBar.setDisplayHomeAsUpEnabled(true);
 		
+		// Get an instance of the inputManager
 		inputMethodManager = (InputMethodManager)  getSystemService(Activity.INPUT_METHOD_SERVICE);
 		
-		
-		dbHelper = new TaskDbHelper(this);
-		notifier = new Notifier(this, dbHelper);
-		taskAdapter = new TaskAdapter(this, this, dbHelper);
-		
-		fab = (ImageButton)this.findViewById(R.id.fab);		
+		// Get UI handles
+		fab = (ImageButton)this.findViewById(R.id.fab);
 		fab_expand = (ImageButton)this.findViewById(R.id.fab_expand);
-
+		listView = (ListView)this.findViewById(R.id.listView1);
+		newItemTitle = (TextView)this.findViewById(R.id.new_item_title);
+		
+		// Create the FAB controllers
 		delete_fab_controller = new SimpleFABController(fab);
 		delete_fab_controller.setup();
 		edit_fab_controller = new SimpleFABController(fab_expand);
 		edit_fab_controller.setup();
 		
-		listView = (ListView)this.findViewById(R.id.listView1);
-		listView.setEmptyView(this.findViewById(R.id.empty_list));
-		listView.setOnItemClickListener(new OnTaskClicked(taskAdapter, notifier));
-		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		
+		// Create Utility classes
+		dbHelper = new TaskDbHelper(this);
+		notifier = new Notifier(this, dbHelper);
 		multiSelector = new MultiTaskActionMode(listView, delete_fab_controller, notifier);
-		listView.setMultiChoiceModeListener(multiSelector);
+		mainTaskEditor = new MainTaskEditor(this, 
+				listView, newItemTitle, 
+				inputMethodManager, multiSelector, notifier);
+		taskAdapter = new TaskAdapter(this, mainTaskEditor, dbHelper);
 		
+		// Set editor options
+		mainTaskEditor.setTaskAdapter(taskAdapter);
+		
+		// set the listview options
+		listView.setMultiChoiceModeListener(multiSelector);
+		listView.setEmptyView(this.findViewById(R.id.empty_list));
+		listView.setOnItemClickListener(new OnTaskClicked(mainTaskEditor));
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		listView.setAdapter(taskAdapter);
 		
-		NewTaskTitleListener newItemTitleListerner = new NewTaskTitleListener(edit_fab_controller, this);
-		
-		newItemTitle = (TextView)this.findViewById(R.id.new_item_title);
+		// Create a listener for text input
+		NewTaskTitleListener newItemTitleListerner = new NewTaskTitleListener(edit_fab_controller, mainTaskEditor);
 		newItemTitle.addTextChangedListener(newItemTitleListerner);
 		newItemTitle.setOnFocusChangeListener(newItemTitleListerner);
 		newItemTitle.setOnKeyListener(newItemTitleListerner);
@@ -126,52 +135,16 @@ public class MainActivity extends Activity implements TaskEditor {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
+//		int id = item.getItemId();
 //		if (id == R.id.action_settings) {
 //			return true;
 //		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	@Override
-	public void newTask() {
-		cancelTaskSelected(true);
-		
-		// make sure there is something in the editbox
-		if (newItemTitle.getText().toString().isEmpty())
-			return;
-		
-        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-		
-        taskAdapter.add(new Task(newItemTitle.getText().toString()));
-        
-        // commented out because...
-        newItemTitle.setText("");
-	}
-
-	@Override
-	public void newTaskDetail() {
-		Task task = new Task(newItemTitle.getText().toString());
-		newItemTitle.setText("");
-		Log.d("PlanIt.Debug", "Create Task["+task.getId()+"]: "+task.getTitle());
-		editTask(task);
-	}
-	
-	@Override
-	public void editTask(Task task) {
-		Log.d("PlanIt.Debug", "Edit Task["+task.getId()+"]: "+task.getTitle());
-		cancelTaskSelected(true);
-		startEditActivity(task);
-	}
-	
-	@Override
-	public boolean cancelTaskSelected(boolean callfinish) {
-		return multiSelector.finish();
-	}
 	
 	// Called by the UI directly
 	public void addNewTask(View v) {
-		newTask();
+		mainTaskEditor.newTask();
 	}
 	
 	// Called by the UI directly
@@ -180,7 +153,7 @@ public class MainActivity extends Activity implements TaskEditor {
 		inputMethodManager.showSoftInput(newItemTitle, 0);
 	}
 	
-	private void startEditActivity(Task task) {
+	public void startEditActivity(Task task) {
 		Intent intent = new Intent(this, EditTaskActivity.class);
 		intent.putExtra("task_title", task.getTitle());
 		intent.putExtra("task_id", task.getId());
