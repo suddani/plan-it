@@ -66,7 +66,7 @@ public class MainActivity extends Activity implements TaskEditor {
 		
 		listView = (ListView)this.findViewById(R.id.listView1);
 		listView.setEmptyView(this.findViewById(R.id.empty_list));
-		listView.setOnItemClickListener(new OnTaskClicked(taskAdapter, notifier));
+		listView.setOnItemClickListener(new OnTaskClicked(this));
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		
 		multiSelector = new MultiTaskActionMode(listView, delete_fab_controller, notifier);
@@ -126,7 +126,7 @@ public class MainActivity extends Activity implements TaskEditor {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
+//		int id = item.getItemId();
 //		if (id == R.id.action_settings) {
 //			return true;
 //		}
@@ -162,6 +162,16 @@ public class MainActivity extends Activity implements TaskEditor {
 		Log.d("PlanIt.Debug", "Edit Task["+task.getId()+"]: "+task.getTitle());
 		cancelTaskSelected(true);
 		startEditActivity(task);
+	}
+	
+	@Override
+	public void toggleTask(Task task) {
+		ListViewAnimator animator = new ListViewAnimator(this.listView, (View)null);
+		animator.animateLayout();
+		task.setDone(!task.isDone());
+		task.update();
+		notifier.setNextAlarm(null);
+		taskAdapter.notifyDataSetChanged();
 	}
 	
 	@Override
