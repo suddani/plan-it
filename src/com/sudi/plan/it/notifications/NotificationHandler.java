@@ -46,6 +46,7 @@ public class NotificationHandler extends BroadcastReceiver {
 			notifiyActivity(context);
 			notifier.setNextAlarm(dbHelper);
 		}
+		dbHelper.close();
 	}
 
 }
