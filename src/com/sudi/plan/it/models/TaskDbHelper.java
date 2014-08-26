@@ -9,6 +9,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * This class manages access to the Database
+ * @author dsudmann
+ *
+ */
 public class TaskDbHelper extends SQLiteOpenHelper {
 
 	private static final int 	DATABASE_VERSION 	= 1;
@@ -30,6 +35,11 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 		onCreate(db);
 	}
 	
+	/**
+	 * Save a task in the Database
+	 * Also calls setDbHelper on the Task.
+	 * @param task The Task to be saved
+	 */
 	public void addTask(Task task) {
 		if (task.getId() != -1) {
 			updateTask(task);
@@ -43,7 +53,12 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 		loadTaskList(db);
 //		db.close();
 	}
-	
+
+	/**
+	 * Get a Task from the Database that belongs to the id
+	 * @param id The id of the Task you are looking for.
+	 * @return Returns an instance of the Task if it exists otherwise null.
+	 */
 	public Task getTask(long id) {		
 		// did not find it so load from DB
 		SQLiteDatabase db = getReadableDatabase();
@@ -54,13 +69,24 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 			return null;
 	}
 
+	/**
+	 * Get all tasks from the Database.
+	 * This call is cached and only loads the Tasks on the first call, except if reload is set to true.
+	 * @param reload If this variable is false a cached list is returned if it exists. Otherwise the list is reloaded.
+	 * @return The List with all Tasks
+	 */
 	public List<Task> getTasks(boolean reload) {
 		if (taskList != null && !reload)
 			return taskList;
 		
 		return loadTaskList(null);
 	}
-	
+
+	/**
+	 * Load the TaskList from the Database
+	 * @param db_handle The handle of an open SQLiteDatabase. If you pass in null a "new" handle will be used.
+	 * @return The List of Tasks in the Database
+	 */
 	private List<Task> loadTaskList(SQLiteDatabase db_handle) {
 		taskList = new ArrayList<Task>();
 		String selectQuery = "SELECT  * FROM " + Task.TABLE + " ORDER BY "+Task.KEY_DONE+" ASC, "+Task.KEY_DUEDATE+" ASC, "+Task.KEY_ID+" DESC";
@@ -79,7 +105,12 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 //			db.close();
 		return taskList;
 	}
-	
+
+	/**
+	 * Update a Task in the Database
+	 * If the Task does not exist it will be created.
+	 * @param task The Task to be updated
+	 */
 	public void updateTask(Task task) {
 		if (task.getId() == -1) {
 			addTask(task);
@@ -93,7 +124,11 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 		loadTaskList(db);
 //		db.close();
 	}
-	
+
+	/**
+	 * Remove a Task from the Database
+	 * @param task The Task to be removed.
+	 */
 	public void removeTask(Task task) {
 		if (task.getId() == -1) {
 			Log.d("PlanIt.Debug", "Can not remove task that is not in the Database");
@@ -107,6 +142,11 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 //		db.close();
 	}
 
+	/**
+	 * This function returns the Task with the closest dueDate in the Future whose state is not done.
+	 * @param db_handle The handle of an open SQLiteDatabase. If you pass in null a "new" handle will be used.
+	 * @return Returns the Task with the closest dueDate in the Future or null if there is none.
+	 */
 	public Task getNextDueTask(SQLiteDatabase db_handle) {
 		SQLiteDatabase db = db_handle;
 		if (db == null)

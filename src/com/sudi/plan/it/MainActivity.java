@@ -4,7 +4,7 @@ import com.sudi.plan.it.animations.ListViewAnimator;
 import com.sudi.plan.it.listener.MultiTaskActionMode;
 import com.sudi.plan.it.listener.NewTaskTitleListener;
 import com.sudi.plan.it.listener.OnTaskClicked;
-import com.sudi.plan.it.models.MainTaskEditor;
+import com.sudi.plan.it.models.MainTaskListEditor;
 import com.sudi.plan.it.models.Task;
 import com.sudi.plan.it.models.TaskAdapter;
 import com.sudi.plan.it.models.TaskDbHelper;
@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
 	private BroadcastReceiver updated_receiver;
 	private Notifier notifier;
 	private TaskDbHelper dbHelper;
-	private MainTaskEditor mainTaskEditor;
+	private MainTaskListEditor mainTaskEditor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
 		dbHelper = new TaskDbHelper(this);
 		notifier = new Notifier(this, dbHelper);
 		multiSelector = new MultiTaskActionMode(listView, delete_fab_controller, notifier);
-		mainTaskEditor = new MainTaskEditor(this, 
+		mainTaskEditor = new MainTaskListEditor(this,
 				listView, newItemTitle, 
 				inputMethodManager, multiSelector, notifier);
 		taskAdapter = new TaskAdapter(this, mainTaskEditor, dbHelper);

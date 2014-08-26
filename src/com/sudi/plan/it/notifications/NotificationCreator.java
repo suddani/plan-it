@@ -13,6 +13,11 @@ import com.sudi.plan.it.EditTaskActivity;
 import com.sudi.plan.it.R;
 import com.sudi.plan.it.models.Task;
 
+/**
+ * This class is used to create Notofications based on Tasks
+ * @author dsudmann
+ *
+ */
 public class NotificationCreator {
 	private Context context;
 	private NotificationManagerCompat notificationManager;
@@ -24,10 +29,18 @@ public class NotificationCreator {
 		notificationManager = NotificationManagerCompat.from(context);
 	}
 	
+	/**
+	 * Cancel the notification that belongs to the Task
+	 * @param task The Task whose notification should be canceled.
+	 */
 	public void cancel(Task task) {
 		notificationManager.cancel((int) task.getId());
 	}
 	
+	/**
+	 * Display a notification for a Task
+	 * @param task The Task that should be displayed int the Notification Bar
+	 */
 	public void notify(Task task) {
 		if (task == null) {
 			Log.e("PlanIt.Debug", "Fatal error...called notify on deleted task");
@@ -54,7 +67,12 @@ public class NotificationCreator {
 		notificationManager.notify(notificationId, notificationBuilder.build());
 	}
 	
-	
+	/**
+	 * Creates an intent to open the EditTaskActivity for a Task
+	 * @param context The application Context
+	 * @param task The Task that should be used
+	 * @return The Intent that triggers the action
+	 */
 	private PendingIntent showIntent(Context context, Task task) {
 		Intent intent = new Intent(context, EditTaskActivity.class);
 		intent.putExtra("task_id", (long)task.getId());
@@ -65,6 +83,12 @@ public class NotificationCreator {
                 PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 	
+	/**
+	 * Creates an intent to delete the Task
+	 * @param context The application Context
+	 * @param task The Task that should be deleted
+	 * @return The Intent that triggers the action
+	 */
 	private PendingIntent deleteIntent(Context context, Task task) {
 		Intent intent = new Intent(context, NotificationHandler.class);
 		intent.putExtra("action", "delete");
@@ -76,6 +100,12 @@ public class NotificationCreator {
                 PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 	
+	/**
+	 * Creates an intent to postpone the Task notification
+	 * @param context The application Context
+	 * @param task The Task that should be post poned
+	 * @return The Intent that triggers the action
+	 */
 	private PendingIntent laterIntent(Context context, Task task) {
 		Intent intent = new Intent(context, NotificationHandler.class);
 		intent.putExtra("action", "later");
@@ -87,6 +117,12 @@ public class NotificationCreator {
                 PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 	
+	/**
+	 * Creates an intent to dismiss/mark as done the Task notification
+	 * @param context The application Context
+	 * @param task The Task that should be dismissed/marked as done
+	 * @return The Intent that triggers the action
+	 */
 	private PendingIntent dismissIntent(Context context, Task task) {
 		Intent intent = new Intent(context, NotificationHandler.class);
 		intent.putExtra("action", "done");

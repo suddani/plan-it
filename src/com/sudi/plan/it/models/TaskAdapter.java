@@ -11,26 +11,47 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+/**
+ * This class is used to provide the ListView with Task views.
+ * @author dsudmann
+ *
+ */
 public class TaskAdapter extends ArrayAdapter<Task> {
 
 	private TaskDbHelper dbHelper;
 	private TaskViewFactory factory;
 
-	public TaskAdapter(Context context, TaskEditor taskEditor, TaskDbHelper dbHelper) {
+	public TaskAdapter(Context context, TaskListEditor taskEditor, TaskDbHelper dbHelper) {
 		super(context, R.layout.todo_item_date);
 		this.dbHelper = dbHelper;
 		factory = new TaskViewFactory(taskEditor, this, (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE));
 	}
 
+	/**
+	 * Get all Tasks that are currently in the adapter
+	 * @return A List object with all the Task s
+	 */
 	private List<Task> tasks() {
 		return dbHelper.getTasks(false);
 	}
 	
+	/**
+	 * Reload the tasks from the Database
+	 */
 	public void reload() {
 		this.dbHelper.getTasks(true);
 		notifyDataSetChanged();
 	}
 	
+	/**
+	 * Get a Task by id from the TaskAdapter
+	 * @param task_id The id that belongs to the Task you are looking for.
+	 * @return Returns the Task if the id is valid. null otherwise.
+	 */
+	public Task getTask(long task_id) {
+		return dbHelper.getTask(task_id);
+	}
+
 	@Override
 	public int getItemViewType(int position) {
 		Task task = getItem(position);
@@ -88,10 +109,6 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Task current = tasks().get(position);
 		return factory.create(current, convertView, parent);
-	}
-
-	public Task getTask(long task_id) {
-		return dbHelper.getTask(task_id);
 	}
 
 }

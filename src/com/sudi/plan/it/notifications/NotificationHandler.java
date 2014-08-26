@@ -8,8 +8,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+/**
+ * Used to handle user interaction with a Task notification
+ * @author dsudmann
+ *
+ */
 public class NotificationHandler extends BroadcastReceiver {
 	
+	/**
+	 * Notify the activities of the app that a Task was modified
+	 * @param context
+	 */
 	private void notifiyActivity(Context context) {
 		Intent myFilteredResponse= new Intent("task.updated");
 		context.sendBroadcast(myFilteredResponse);

@@ -11,6 +11,11 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 import android.widget.DatePicker;
 
+/**
+ * This fragment is used to create a date picker based on a supplied task
+ * @author dsudmann
+ *
+ */
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 	
 	private Task task;
