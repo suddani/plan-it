@@ -47,11 +47,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 	public Task getTask(long id) {		
 		// did not find it so load from DB
 		SQLiteDatabase db = getReadableDatabase();
-		Cursor cursor = db.query(Task.TABLE, new String[]{Task.KEY_ID,
-				Task.KEY_TITLE,
-				Task.KEY_DESCRIPTION,
-				Task.KEY_DUEDATE,
-				Task.KEY_DONE}, Task.KEY_ID + " = ?", new String[]{String.valueOf(id)}, null, null, null);
+		Cursor cursor = db.query(Task.TABLE, null, Task.KEY_ID + " = ?", new String[]{String.valueOf(id)}, null, null, null, "1");
 		if (cursor.moveToFirst()) {
 			return Task.fromCursor(cursor, this);
 		}else
