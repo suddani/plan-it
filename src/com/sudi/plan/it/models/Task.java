@@ -55,6 +55,7 @@ public class Task {
 			shareText+="\n---\n"+description;
 		if (dueDate != null)
 			shareText+="\n---\n"+this.getPrettyDate();
+		shareText+="\n\nShared with Plan.It";
 		return shareText;
 	}
 
