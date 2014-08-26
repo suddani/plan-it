@@ -1,8 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:drawable="@drawable/action_button_shadow"/>
+<!--     <item android:drawable="@drawable/action_button_shadow"/>
     <item
     	android:drawable="@drawable/action_button"
-    	android:bottom="4px"
-    	android:right="4px" />
+    	android:bottom="8px"
+    	android:right="8px"
+    	android:left="8px"
+    	android:top="8px" /> -->
+    	<!-- Drop Shadow Stack -->
+     <item>
+        <shape android:shape="oval">
+            <padding android:top="1dp" android:right="1dp" android:bottom="1dp" android:left="1dp" />
+            <solid android:color="#00CCCCCC" />
+        </shape>
+    </item>
+     <item>
+        <shape android:shape="oval">
+            <padding android:top="1dp" android:right="1dp" android:bottom="1dp" android:left="1dp" />
+            <solid android:color="#10CCCCCC" />
+        </shape>
+    </item>
+     <item>
+        <shape android:shape="oval">
+            <padding android:top="1dp" android:right="1dp" android:bottom="1dp" android:left="1dp" />
+            <solid android:color="#20CCCCCC" />
+        </shape>
+    </item>
+     <item>
+        <shape android:shape="oval">
+            <padding android:top="1dp" android:right="1dp" android:bottom="1dp" android:left="1dp" />
+            <solid android:color="#30CCCCCC" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <padding android:top="1dp" android:right="1dp" android:bottom="1dp" android:left="1dp" />
+            <solid android:color="#50CCCCCC" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <padding android:top="1dp" android:right="1dp" android:bottom="1dp" android:left="1dp" />
+            <solid android:color="#60CCCCCC" />
+        </shape>
+    </item>
+    <item
+    	android:drawable="@drawable/action_button" />
 </layer-list>
