@@ -20,6 +20,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 		NotificationCreator notification = new NotificationCreator(context);
 		if (task_id != -1)
 			notification.notify(dbHelper.getTask(task_id));
+		
+		Notifier notifier = new Notifier(context, dbHelper);
+		notifier.setNextAlarm(null);
 	}
 
 }
