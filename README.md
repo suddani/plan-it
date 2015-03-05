@@ -5,6 +5,9 @@
 This project is created with eclipse and building should be therefor straight forward when using eclipse.
 The Android 4.4W release is used to build against to provide wear features.
 
+## Video
+https://www.youtube.com/watch?v=avSKoPqirk0
+
 ## Extend
 ##### Create new icons
 Use the following settings in the android asset creator:
